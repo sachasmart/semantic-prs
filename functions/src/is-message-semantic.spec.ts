@@ -258,4 +258,14 @@ describe('isMessageSemantic', () => {
 
     expect(isSemantic).toEqual(false);
   });
+
+  it('should return true if the title has "BREAKING CHANGE"', () => {
+    const message = 'BREAKING CHANGE';
+    const isSemantic = isMessageSemantic(defaultConfig)(message);
+    expect(isSemantic).toEqual(true);
+
+    const message2 = 'BREAKING-CHANGE: change foo to bar';
+    const isSemantic2 = isMessageSemantic(defaultConfig)(message2);
+    expect(isSemantic2).toEqual(true);
+  });
 });

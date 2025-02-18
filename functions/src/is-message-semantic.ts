@@ -22,6 +22,10 @@ export function isMessageSemantic({
       return true;
     }
 
+    if (message.trim().toUpperCase().startsWith('BREAKING CHANGE')) {
+      return true;
+    }
+
     if (message.startsWith(' ')) {
       return false;
     }
@@ -33,10 +37,14 @@ export function isMessageSemantic({
       return false;
     }
 
-    const { scope, type } = commit;
+    const { scope, type, notes } = commit;
     const isScopeValid = !scopes || !scope || scope.split(/, ?/).every(scope => scopes.includes(scope));
     const isTypeValid = (types.length > 0 ? types : commitTypes).includes(type) && validTypeSyntaxRegex.test(message);
 
-    return isTypeValid && isScopeValid;
+    // If the commit has a breaking change note or ends with a '!', it is considered a breaking change
+    const hasBreakingChange =
+      notes.some((note: { title: string }) => note.title === 'BREAKING CHANGE') || type.endsWith('!');
+
+    return isTypeValid && isScopeValid && !hasBreakingChange;
   };
 }
