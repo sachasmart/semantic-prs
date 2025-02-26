@@ -268,4 +268,10 @@ describe('isMessageSemantic', () => {
     const isSemantic2 = isMessageSemantic(defaultConfig)(message2);
     expect(isSemantic2).toEqual(true);
   });
+
+  it('should return true if the title has ! at the end', () => {
+    const message = 'revert!: change foo to bar';
+    const isSemantic = isMessageSemantic(defaultConfig)(message);
+    expect(isSemantic).toEqual(true);
+  });
 });
